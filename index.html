@@ -92,6 +92,144 @@
             font-weight: bold;
         }
     </style>
+</head>
+<body>
+    <div class="header-right">NC.ADVOCAT Luxembourg</div>
+    <h1>Scoring des Risques</h1>
+    <form onsubmit="event.preventDefault(); calculateScore();">
+        <div class="question">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <div class="question">
+            <label for="nomClient">Nom du client</label>
+            <input type="text" id="nomClient" name="nomClient" required>
+        </div>
+        <div class="question">
+            <label for="societe">Société</label>
+            <input type="text" id="societe" name="societe" required>
+        </div>
+        <div class="question">
+            <label for="completePar">Complété par</label>
+            <input type="text" id="completePar" name="completePar" required>
+        </div>
+        <div class="question">
+            <h2>1. FACTEURS DE RISQUE RELATIFS AU CLIENT</h2>
+            <label>1.1. Établissement de la relation</label>
+            <input type="radio" id="relation1" name="relation" value="0" required> En personne le client est physiquement présent<br>
+            <input type="radio" id="relation2" name="relation" value="50"> A distance le client n’était pas présent et personne ne le connaît<br>
+            <input type="radio" id="relation3" name="relation" value="30"> A distance le client n’était pas présent mais a été introduit par un contact de confiance au sein de l’entreprise<br>
+            <input type="radio" id="relation4" name="relation" value="10"> A distance le client n’était pas présent mais a été présenté par un collègue<br>
+            <input type="radio" id="relation5" name="relation" value="10"> A distance le client n’était pas présent mais a été introduit par une personne assujettie à la législation LBC/FT ayant déjà vérifié son identité<br>
+        </div>
+        <div class="question">
+            <label>1.2 Localisation du client</label>
+            <input type="radio" id="localisation1" name="localisation" value="0" required> Le pays n’est pas inclus dans la liste des pays à hauts risques<br>
+            <input type="radio" id="localisation2" name="localisation" value="100"> Le pays est inclus dans la liste des pays à hauts risques<br>
+        </div>
+        <div class="question">
+            <label>1.3 Des informations pouvant jeter un doute sur la légitimité des activités du client ou sur son implication dans des activités de blanchiment ou de financement du terrorisme ont-elles été trouvées par le biais d'un moteur de recherche ?</label>
+            <input type="radio" id="doute1" name="doute" value="0" required> Non<br>
+            <input type="radio" id="doute2" name="doute" value="200"> Oui<br>
+        </div>
+        <div class="question">
+            <label>1.4 Domaine d'activité/industrie du client</label>
+            <input type="radio" id="domaine1" name="domaine" value="0" required> Aucun risque établi<br>
+            <input type="radio" id="domaine2" name="domaine" value="50"> Risque potentiel identifié<br>
+            <input type="radio" id="domaine3" name="domaine" value="100"> Risque établi<br>
+        </div>
+        <div class="question">
+            <label>1.5 Le client/bénéficiaire effectif est-il une Personne politiquement exposée (PPE)?</label>
+            <input type="radio" id="ppe1" name="ppe" value="200" required> PPE<br>
+            <input type="radio" id="ppe2" name="ppe" value="150"> Membre de la famille d’un PPE<br>
+            <input type="radio" id="ppe3" name="ppe" value="150"> Entretient des liens étroits ou est connu pour entretenir des liens étroits avec un PPE<br>
+            <input type="radio" id="ppe4" name="ppe" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>1.6 Le client fait-il partie d'une entreprise ?</label>
+            <input type="radio" id="entreprise1" name="entreprise" value="150" required> Oui<br>
+            <input type="radio" id="entreprise2" name="entreprise" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>1.7 Le client est-il (associé à) une entreprise dont la structure de propriété semble inhabituelle ou excessivement complexe, compte tenu de sa nature</label>
+            <input type="radio" id="structure1" name="structure" value="0" required> Structure simple<br>
+            <input type="radio" id="structure2" name="structure" value="50"> Structure complexe<br>
+            <input type="radio" id="structure3" name="structure" value="100"> Structure inhabituelle ou excessivement complexe compte tenu de la nature des activités<br>
+        </div>
+        <div class="question">
+            <h2>2. FACTEURS DE RISQUES RELATIFS AU DOSSIER</h2>
+            <label>2.1 L'avocat est consulté en relation avec une mission dont le domaine ne relève pas de sa pratique ou de son expertise habituelle</label>
+            <input type="radio" id="mission1" name="mission" value="0" required> Aucun risque établi<br>
+            <input type="radio" id="mission2" name="mission" value="50"> Risque potentiel identifié<br>
+            <input type="radio" id="mission3" name="mission" value="100"> Risque établi<br>
+        </div>
+        <div class="question">
+            <label>2.2 L'avocat est consulté par courrier électronique et aucune rencontre en personne n'est d'ailleurs prévue :</label>
+            <input type="radio" id="email1" name="email" value="100" required> Oui<br>
+            <input type="radio" id="email2" name="email" value="0"> Non<br>
+        </div>
+        <div class="question">
+                        <label>2.3 Le contact est inhabituel (par exemple, par l'intermédiaire d'un tiers)</label>
+            <input type="radio" id="contact1" name="contact" value="50" required> Oui<br>
+            <input type="radio" id="contact2" name="contact" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.4 Le client exige un délai qui ne semble pas objectivement justifié par le type d'affaire</label>
+            <input type="radio" id="delai1" name="delai" value="50" required> Oui<br>
+            <input type="radio" id="delai2" name="delai" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.5 L'objectif de la demande est d'effectuer d'importantes transactions financières dans un délai très court, sans justification économique claire</label>
+            <input type="radio" id="transactions1" name="transactions" value="200" required> Oui<br>
+            <input type="radio" id="transactions2" name="transactions" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.6 La mission consiste à mettre en place des structures juridiques (sociétés, trusts, etc.) qui n'ont pas de finalité économique évidente, si ce n'est de rendre opaque l'origine des flux financiers</label>
+            <input type="radio" id="structures1" name="structures" value="200" required> Oui<br>
+            <input type="radio" id="structures2" name="structures" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.7 L'avocat n'est responsable que d'une partie de l'affaire</label>
+            <input type="radio" id="responsable1" name="responsable" value="150" required> Oui<br>
+            <input type="radio" id="responsable2" name="responsable" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.8 Un avocat luxembourgeois est consulté au Luxembourg en relation avec les investissements effectués dans des pays réputés peu fiables d'un point de vue bancaire ou juridictionnel (par exemple : listes de risques)</label>
+            <input type="radio" id="investissements1" name="investissements" value="200" required> Oui<br>
+            <input type="radio" id="investissements2" name="investissements" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.9 L'avocat se voit proposer une affaire dans laquelle le client offre spontanément des honoraires anormalement élevés au début de l'affaire ou à un stade précoce de celle-ci</label>
+            <input type="radio" id="honoraires1" name="honoraires" value="150" required> Oui<br>
+            <input type="radio" id="honoraires2" name="honoraires" value="0"> Non<br>
+        </div>
+        <div class="question">
+            <label>2.10 L'avocat est consulté dans une affaire qui ne relève pas de l'une des deux fonctions habituelles de l'avocat (défense ou conseil juridique) et qui implique également des transferts de fonds (y compris par l'intermédiaire d'un compte fiduciaire)</label>
+            <input type="radio" id="transferts1" name="transferts" value="200" required> Oui<br>
+            <input type="radio" id="transferts2" name="transferts" value="0"> Non<br>
+        </div>
+        <button type="submit" class="submit-btn">Soumettre</button>
+    </form>
+    <div class="result-container">
+        <div>
+            <div class="circle" id="clientScore"></div>
+            <div class="circle-title">Score Client</div>
+        </div>
+        <div>
+            <div class="circle" id="dossierScore"></div>
+            <div class="circle-title">Score Dossier</div>
+        </div>
+        <div>
+            <div class="circle" id="totalScore"></div>
+            <div class="circle-title">Score Total</div>
+        </div>
+        <div>
+            <div class="circle" id="riskLevel"></div>
+            <div class="circle-title">Classement</div>
+        </div>
+    </div>
+    <button class="pdf-btn" onclick="saveAsPDF()">Enregistrer en PDF</button>
+
     <script>
         function calculateScore() {
             let clientScore = 0;
@@ -168,7 +306,7 @@
             } else if (totalScore <= 199) {
                 riskLevel = 'Risque normal';
                 riskClass = 'medium-risk';
-            } else {
+                        } else {
                 riskLevel = 'Risque élevé';
                 riskClass = 'high-risk';
             }
@@ -196,7 +334,7 @@
             doc.text("1.1. Établissement de la relation: " + document.querySelector('input[name="relation"]:checked').nextSibling.textContent.trim(), 10, 80);
             doc.text("1.2. Localisation du client: " + document.querySelector('input[name="localisation"]:checked').nextSibling.textContent.trim(), 10, 90);
             doc.text("1.3. Doute sur la légitimité: " + document.querySelector('input[name="doute"]:checked').nextSibling.textContent.trim(), 10, 100);
-                        doc.text("1.4. Domaine d'activité: " + document.querySelector('input[name="domaine"]:checked').nextSibling.textContent.trim(), 10, 110);
+            doc.text("1.4. Domaine d'activité: " + document.querySelector('input[name="domaine"]:checked').nextSibling.textContent.trim(), 10, 110);
             doc.text("1.5. PPE: " + document.querySelector('input[name="ppe"]:checked').nextSibling.textContent.trim(), 10, 120);
             doc.text("1.6. Entreprise: " + document.querySelector('input[name="entreprise"]:checked').nextSibling.textContent.trim(), 10, 130);
             doc.text("1.7. Structure de propriété: " + document.querySelector('input[name="structure"]:checked').nextSibling.textContent.trim(), 10, 140);
@@ -225,142 +363,5 @@
             doc.save("scoring_des_risques.pdf");
         }
     </script>
-</head>
-<body>
-    <div class="header-right">NC.ADVOCAT Luxembourg</div>
-    <h1>Scoring des Risques</h1>
-    <form onsubmit="event.preventDefault(); calculateScore();">
-        <div class="question">
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date" required>
-        </div>
-        <div class="question">
-            <label for="nomClient">Nom du client</label>
-            <input type="text" id="nomClient" name="nomClient" required>
-        </div>
-        <div class="question">
-            <label for="societe">Société</label>
-            <input type="text" id="societe" name="societe" required>
-        </div>
-        <div class="question">
-            <label for="completePar">Complété par</label>
-            <input type="text" id="completePar" name="completePar" required>
-        </div>
-        <div class="question">
-            <h2>1. FACTEURS DE RISQUE RELATIFS AU CLIENT</h2>
-            <label>1.1. Établissement de la relation</label>
-            <input type="radio" id="relation1" name="relation" value="0" required> En personne le client est physiquement présent<br>
-            <input type="radio" id="relation2" name="relation" value="50"> A distance le client n’était pas présent et personne ne le connaît<br>
-            <input type="radio" id="relation3" name="relation" value="30"> A distance le client n’était pas présent mais a été introduit par un contact de confiance au sein de l’entreprise<br>
-            <input type="radio" id="relation4" name="relation" value="10"> A distance le client n’était pas présent mais a été présenté par un collègue<br>
-            <input type="radio" id="relation5" name="relation" value="10"> A distance le client n’était pas présent mais a été introduit par une personne assujettie à la législation LBC/FT ayant déjà vérifié son identité<br>
-        </div>
-        <div class="question">
-            <label>1.2 Localisation du client</label>
-            <input type="radio" id="localisation1" name="localisation" value="0" required> Le pays n’est pas inclus dans la liste des pays à hauts risques<br>
-            <input type="radio" id="localisation2" name="localisation" value="100"> Le pays est inclus dans la liste des pays à hauts risques<br>
-        </div>
-        <div class="question">
-            <label>1.3 Des informations pouvant jeter un doute sur la légitimité des activités du client ou sur son implication dans des activités de blanchiment ou de financement du terrorisme ont-elles été trouvées par le biais d'un moteur de recherche ?</label>
-            <input type="radio" id="doute1" name="doute" value="0" required> Non<br>
-            <input type="radio" id="doute2" name="doute" value="200"> Oui<br>
-        </div>
-        <div class="question">
-            <label>1.4 Domaine d'activité/industrie du client</label>
-            <input type="radio" id="domaine1" name="domaine" value="0" required> Aucun risque établi<br>
-            <input type="radio" id="domaine2" name="domaine" value="50"> Risque potentiel identifié<br>
-            <input type="radio" id="domaine3" name="domaine" value="100"> Risque établi<br>
-        </div>
-        <div class="question">
-            <label>1.5 Le client/bénéficiaire effectif est-il une Personne politiquement exposée (PPE)?</label>
-            <input type="radio" id="ppe1" name="ppe" value="200" required> PPE<br>
-            <input type="radio" id="ppe2" name="ppe" value="150"> Membre de la famille d’un PPE<br>
-            <input type="radio" id="ppe3" name="ppe" value="150"> Entretient des liens étroits ou est connu pour entretenir des liens étroits avec un PPE<br>
-            <input type="radio" id="ppe4" name="ppe" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>1.6 Le client fait-il partie d'une entreprise ?</label>
-            <input type="radio" id="entreprise1" name="entreprise" value="150" required> Oui<br>
-            <input type="radio" id="entreprise2" name="entreprise" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>1.7 Le client est-il (associé à) une entreprise dont la structure de propriété semble inhabituelle ou excessivement complexe, compte tenu de sa nature</label>
-            <input type="radio" id="structure1" name="structure" value="0" required> Structure simple<br>
-            <input type="radio" id="structure2" name="structure" value="50"> Structure complexe<br>
-            <input type="radio" id="structure3" name="structure" value="100"> Structure inhabituelle ou excessivement complexe compte tenu de la nature des activités<br>
-        </div>
-        <div class="question">
-            <h2>2. FACTEURS DE RISQUES RELATIFS AU DOSSIER</h2>
-            <label>2.1 L'avocat est consulté en relation avec une mission dont le domaine ne relève pas de sa pratique ou de son expertise habituelle</label>
-            <input type="radio" id="mission1" name="mission" value="0" required> Aucun risque établi<br>
-                        <input type="radio" id="mission2" name="mission" value="50"> Risque potentiel identifié<br>
-            <input type="radio" id="mission3" name="mission" value="100"> Risque établi<br>
-        </div>
-        <div class="question">
-            <label>2.2 L'avocat est consulté par courrier électronique et aucune rencontre en personne n'est d'ailleurs prévue :</label>
-            <input type="radio" id="email1" name="email" value="100" required> Oui<br>
-            <input type="radio" id="email2" name="email" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.3 Le contact est inhabituel (par exemple, par l'intermédiaire d'un tiers)</label>
-            <input type="radio" id="contact1" name="contact" value="50" required> Oui<br>
-            <input type="radio" id="contact2" name="contact" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.4 Le client exige un délai qui ne semble pas objectivement justifié par le type d'affaire</label>
-            <input type="radio" id="delai1" name="delai" value="50" required> Oui<br>
-            <input type="radio" id="delai2" name="delai" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.5 L'objectif de la demande est d'effectuer d'importantes transactions financières dans un délai très court, sans justification économique claire</label>
-            <input type="radio" id="transactions1" name="transactions" value="200" required> Oui<br>
-            <input type="radio" id="transactions2" name="transactions" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.6 La mission consiste à mettre en place des structures juridiques (sociétés, trusts, etc.) qui n'ont pas de finalité économique évidente, si ce n'est de rendre opaque l'origine des flux financiers</label>
-            <input type="radio" id="structures1" name="structures" value="200" required> Oui<br>
-            <input type="radio" id="structures2" name="structures" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.7 L'avocat n'est responsable que d'une partie de l'affaire</label>
-            <input type="radio" id="responsable1" name="responsable" value="150" required> Oui<br>
-            <input type="radio" id="responsable2" name="responsable" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.8 Un avocat luxembourgeois est consulté au Luxembourg en relation avec les investissements effectués dans des pays réputés peu fiables d'un point de vue bancaire ou juridictionnel (par exemple : listes de risques)</label>
-            <input type="radio" id="investissements1" name="investissements" value="200" required> Oui<br>
-            <input type="radio" id="investissements2" name="investissements" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.9 L'avocat se voit proposer une affaire dans laquelle le client offre spontanément des honoraires anormalement élevés au début de l'affaire ou à un stade précoce de celle-ci</label>
-            <input type="radio" id="honoraires1" name="honoraires" value="150" required> Oui<br>
-            <input type="radio" id="honoraires2" name="honoraires" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.10 L'avocat est consulté dans une affaire qui ne relève pas de l'une des deux fonctions habituelles de l'avocat (défense ou conseil juridique) et qui implique également des transferts de fonds (y compris par l'intermédiaire d'un compte fiduciaire)</label>
-            <input type="radio" id="transferts1" name="transferts" value="200" required> Oui<br>
-            <input type="radio" id="transferts2" name="transferts" value="0"> Non<br>
-        </div>
-        <button type="submit" class="submit-btn">Soumettre</button>
-    </form>
-    <div class="result-container">
-        <div>
-            <div class="circle" id="clientScore"></div>
-            <div class="circle-title">Score Client</div>
-        </div>
-        <div>
-            <div class="circle" id="dossierScore"></div>
-            <div class="circle-title">Score Dossier</div>
-        </div>
-        <div>
-            <div class="circle" id="totalScore"></div>
-            <div class="circle-title">Score Total</div>
-        </div>
-        <div>
-            <div class="circle" id="riskLevel"></div>
-            <div class="circle-title">Classement</div>
-        </div>
-    </div>
-    <button class="pdf-btn" onclick="saveAsPDF()">Enregistrer en PDF</button>
 </body>
 </html>
