@@ -25,13 +25,17 @@
             display: block;
             margin-bottom: 5px;
         }
-        .submit-btn, .pdf-btn {
-            background-color: #4CAF50;
+        .submit-btn, .pdf-btn, .nav-btn, .option-btn {
+            background-color: black;
             color: white;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             margin-top: 20px;
+            display: inline-block;
+        }
+        .option-btn.selected {
+            background-color: green;
         }
         .result {
             margin-top: 20px;
@@ -85,6 +89,12 @@
                 opacity: 1;
             }
         }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
         .header-right {
             position: absolute;
             top: 20px;
@@ -97,204 +107,278 @@
     <div class="header-right">NC.ADVOCAT Luxembourg</div>
     <h1>Scoring des Risques</h1>
     <form onsubmit="event.preventDefault(); calculateScore();">
-        <div class="question">
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date" required>
+        <div class="section active" id="section1">
+            <div class="question">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required oninput="checkFormCompletion()">
+            </div>
+            <div class="question">
+                <label for="nomClient">Nom du client</label>
+                <input type="text" id="nomClient" name="nomClient" required oninput="checkFormCompletion()">
+            </div>
+            <div class="question">
+                <label for="societe">Société</label>
+                <input type="text" id="societe" name="societe" required oninput="checkFormCompletion()">
+            </div>
+            <div class="question">
+                <label for="completePar">Complété par</label>
+                <input type="text" id="completePar" name="completePar" required oninput="checkFormCompletion()">
+            </div>
+            <button type="button" class="nav-btn" onclick="nextSection(1)" id="nextBtn1" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label for="nomClient">Nom du client</label>
-            <input type="text" id="nomClient" name="nomClient" required>
+        <div class="section" id="section2">
+            <div class="question">
+                <h2>1. FACTEURS DE RISQUE RELATIFS AU CLIENT</h2>
+                <label>1.1. Établissement de la relation</label>
+                <button type="button" class="option-btn" onclick="selectOption('relation', 0, this)">En personne le client est physiquement présent</button>
+                <button type="button" class="option-btn" onclick="selectOption('relation', 50, this)">A distance le client n’était pas présent et personne ne le connaît</button>
+                <button type="button" class="option-btn" onclick="selectOption('relation', 30, this)">A distance le client n’était pas présent mais a été introduit par un contact de confiance au sein de l’entreprise</button>
+                <button type="button" class="option-btn" onclick="selectOption('relation', 10, this)">A distance le client n’était pas présent mais a été présenté par un collègue</button>
+                <button type="button" class="option-btn" onclick="selectOption('relation', 10, this)">A distance le client n’était pas présent mais a été introduit par une personne assujettie à la législation LBC/FT ayant déjà vérifié son identité</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(1)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(2)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label for="societe">Société</label>
-            <input type="text" id="societe" name="societe" required>
+        <div class="section" id="section3">
+            <div class="question">
+                <label>1.2 Localisation du client</label>
+                <button type="button" class="option-btn" onclick="selectOption('localisation', 0, this)">Le pays n’est pas inclus dans la liste des pays à hauts risques</button>
+                <button type="button" class="option-btn" onclick="selectOption('localisation', 100, this)">Le pays est inclus dans la liste des pays à hauts risques</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(2)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(3)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label for="completePar">Complété par</label>
-            <input type="text" id="completePar" name="completePar" required>
+        <div class="section" id="section4">
+            <div class="question">
+                <label>1.3 Des informations pouvant jeter un doute sur la légitimité des activités du client ou sur son implication dans des activités de blanchiment ou de financement du terrorisme ont-elles été trouvées par le biais d'un moteur de recherche ?</label>
+                <button type="button" class="option-btn" onclick="selectOption('doute', 0, this)">Non</button>
+                <button type="button" class="option-btn" onclick="selectOption('doute', 200, this)">Oui</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(3)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(4)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <h2>1. FACTEURS DE RISQUE RELATIFS AU CLIENT</h2>
-            <label>1.1. Établissement de la relation</label>
-            <input type="radio" id="relation1" name="relation" value="0" required> En personne le client est physiquement présent<br>
-            <input type="radio" id="relation2" name="relation" value="50"> A distance le client n’était pas présent et personne ne le connaît<br>
-            <input type="radio" id="relation3" name="relation" value="30"> A distance le client n’était pas présent mais a été introduit par un contact de confiance au sein de l’entreprise<br>
-            <input type="radio" id="relation4" name="relation" value="10"> A distance le client n’était pas présent mais a été présenté par un collègue<br>
-            <input type="radio" id="relation5" name="relation" value="10"> A distance le client n’était pas présent mais a été introduit par une personne assujettie à la législation LBC/FT ayant déjà vérifié son identité<br>
+        <div class="section" id="section5">
+            <div class="question">
+                <label>1.4 Domaine d'activité/industrie du client</label>
+                <button type="button" class="option-btn" onclick="selectOption('domaine', 0, this)">Aucun risque établi</button>
+                <button type="button" class="option-btn" onclick="selectOption('domaine', 50, this)">Risque potentiel identifié</button>
+                <button type="button" class="option-btn" onclick="selectOption('domaine', 100, this)">Risque établi</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(4)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(5)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.2 Localisation du client</label>
-            <input type="radio" id="localisation1" name="localisation" value="0" required> Le pays n’est pas inclus dans la liste des pays à hauts risques<br>
-            <input type="radio" id="localisation2" name="localisation" value="100"> Le pays est inclus dans la liste des pays à hauts risques<br>
+        <div class="section" id="section6">
+            <div class="question">
+                <label>1.5 Le client/bénéficiaire effectif est-il une Personne politiquement exposée (PPE)?</label>
+                <button type="button" class="option-btn" onclick="selectOption('ppe', 200, this)">PPE</button>
+                <button type="button" class="option-btn" onclick="selectOption('ppe', 150, this)">Membre de la famille d’un PPE</button>
+                <button type="button" class="option-btn" onclick="selectOption('ppe', 150, this)">Entretient des liens étroits ou est connu pour entretenir des liens étroits avec un PPE</button>
+                <button type="button" class="option-btn" onclick="selectOption('ppe', 0, this)">Non</button>
+            </div>
+                        <button type="button" class="nav-btn" onclick="prevSection(5)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(6)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.3 Des informations pouvant jeter un doute sur la légitimité des activités du client ou sur son implication dans des activités de blanchiment ou de financement du terrorisme ont-elles été trouvées par le biais d'un moteur de recherche ?</label>
-            <input type="radio" id="doute1" name="doute" value="0" required> Non<br>
-            <input type="radio" id="doute2" name="doute" value="200"> Oui<br>
+        <div class="section" id="section7">
+            <div class="question">
+                <label>1.6 Le client fait-il partie d'une entreprise ?</label>
+                <button type="button" class="option-btn" onclick="selectOption('entreprise', 150, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('entreprise', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(6)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(7)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.4 Domaine d'activité/industrie du client</label>
-            <input type="radio" id="domaine1" name="domaine" value="0" required> Aucun risque établi<br>
-            <input type="radio" id="domaine2" name="domaine" value="50"> Risque potentiel identifié<br>
-            <input type="radio" id="domaine3" name="domaine" value="100"> Risque établi<br>
+        <div class="section" id="section8">
+            <div class="question">
+                <label>1.7 Le client est-il (associé à) une entreprise dont la structure de propriété semble inhabituelle ou excessivement complexe, compte tenu de sa nature</label>
+                <button type="button" class="option-btn" onclick="selectOption('structure', 0, this)">Structure simple</button>
+                <button type="button" class="option-btn" onclick="selectOption('structure', 50, this)">Structure complexe</button>
+                <button type="button" class="option-btn" onclick="selectOption('structure', 100, this)">Structure inhabituelle ou excessivement complexe compte tenu de la nature des activités</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(7)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(8)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.5 Le client/bénéficiaire effectif est-il une Personne politiquement exposée (PPE)?</label>
-            <input type="radio" id="ppe1" name="ppe" value="200" required> PPE<br>
-            <input type="radio" id="ppe2" name="ppe" value="150"> Membre de la famille d’un PPE<br>
-            <input type="radio" id="ppe3" name="ppe" value="150"> Entretient des liens étroits ou est connu pour entretenir des liens étroits avec un PPE<br>
-            <input type="radio" id="ppe4" name="ppe" value="0"> Non<br>
+        <div class="section" id="section9">
+            <div class="question">
+                <h2>2. FACTEURS DE RISQUES RELATIFS AU DOSSIER</h2>
+                <label>2.1 L'avocat est consulté en relation avec une mission dont le domaine ne relève pas de sa pratique ou de son expertise habituelle</label>
+                <button type="button" class="option-btn" onclick="selectOption('mission', 0, this)">Aucun risque établi</button>
+                <button type="button" class="option-btn" onclick="selectOption('mission', 50, this)">Risque potentiel identifié</button>
+                <button type="button" class="option-btn" onclick="selectOption('mission', 100, this)">Risque établi</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(8)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(9)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.6 Le client fait-il partie d'une entreprise ?</label>
-            <input type="radio" id="entreprise1" name="entreprise" value="150" required> Oui<br>
-            <input type="radio" id="entreprise2" name="entreprise" value="0"> Non<br>
+        <div class="section" id="section10">
+            <div class="question">
+                <label>2.2 L'avocat est consulté par courrier électronique et aucune rencontre en personne n'est d'ailleurs prévue :</label>
+                <button type="button" class="option-btn" onclick="selectOption('email', 100, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('email', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(9)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(10)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>1.7 Le client est-il (associé à) une entreprise dont la structure de propriété semble inhabituelle ou excessivement complexe, compte tenu de sa nature</label>
-            <input type="radio" id="structure1" name="structure" value="0" required> Structure simple<br>
-            <input type="radio" id="structure2" name="structure" value="50"> Structure complexe<br>
-            <input type="radio" id="structure3" name="structure" value="100"> Structure inhabituelle ou excessivement complexe compte tenu de la nature des activités<br>
+        <div class="section" id="section11">
+            <div class="question">
+                <label>2.3 Le contact est inhabituel (par exemple, par l'intermédiaire d'un tiers)</label>
+                <button type="button" class="option-btn" onclick="selectOption('contact', 50, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('contact', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(10)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(11)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <h2>2. FACTEURS DE RISQUES RELATIFS AU DOSSIER</h2>
-            <label>2.1 L'avocat est consulté en relation avec une mission dont le domaine ne relève pas de sa pratique ou de son expertise habituelle</label>
-            <input type="radio" id="mission1" name="mission" value="0" required> Aucun risque établi<br>
-            <input type="radio" id="mission2" name="mission" value="50"> Risque potentiel identifié<br>
-            <input type="radio" id="mission3" name="mission" value="100"> Risque établi<br>
+        <div class="section" id="section12">
+            <div class="question">
+                <label>2.4 Le client exige un délai qui ne semble pas objectivement justifié par le type d'affaire</label>
+                <button type="button" class="option-btn" onclick="selectOption('delai', 50, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('delai', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(11)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(12)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>2.2 L'avocat est consulté par courrier électronique et aucune rencontre en personne n'est d'ailleurs prévue :</label>
-            <input type="radio" id="email1" name="email" value="100" required> Oui<br>
-            <input type="radio" id="email2" name="email" value="0"> Non<br>
+        <div class="section" id="section13">
+            <div class="question">
+                <label>2.5 L'objectif de la demande est d'effectuer d'importantes transactions financières dans un délai très court, sans justification économique claire</label>
+                <button type="button" class="option-btn" onclick="selectOption('transactions', 200, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('transactions', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(12)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(13)" disabled>Suivant</button>
         </div>
-        <div class="question">
-                        <label>2.3 Le contact est inhabituel (par exemple, par l'intermédiaire d'un tiers)</label>
-            <input type="radio" id="contact1" name="contact" value="50" required> Oui<br>
-            <input type="radio" id="contact2" name="contact" value="0"> Non<br>
+        <div class="section" id="section14">
+            <div class="question">
+                <label>2.6 La mission consiste à mettre en place des structures juridiques (sociétés, trusts, etc.) qui n'ont pas de finalité économique évidente, si ce n'est de rendre opaque l'origine des flux financiers</label>
+                <button type="button" class="option-btn" onclick="selectOption('structures', 200, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('structures', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(13)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(14)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>2.4 Le client exige un délai qui ne semble pas objectivement justifié par le type d'affaire</label>
-            <input type="radio" id="delai1" name="delai" value="50" required> Oui<br>
-            <input type="radio" id="delai2" name="delai" value="0"> Non<br>
+        <div class="section" id="section15">
+            <div class="question">
+                <label>2.7 L'avocat n'est responsable que d'une partie de l'affaire</label>
+                <button type="button" class="option-btn" onclick="selectOption('responsable', 150, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('responsable', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(14)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(15)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>2.5 L'objectif de la demande est d'effectuer d'importantes transactions financières dans un délai très court, sans justification économique claire</label>
-            <input type="radio" id="transactions1" name="transactions" value="200" required> Oui<br>
-            <input type="radio" id="transactions2" name="transactions" value="0"> Non<br>
+        <div class="section" id="section16">
+            <div class="question">
+                <label>2.8 Un avocat luxembourgeois est consulté au Luxembourg en relation avec les investissements effectués dans des pays réputés peu fiables d'un point de vue bancaire ou juridictionnel (par exemple : listes de risques)</label>
+                <button type="button" class="option-btn" onclick="selectOption('investissements', 200, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('investissements', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(15)">Précédent</button>
+            <button type="button" class="nav-btn" onclick="nextSection(16)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>2.6 La mission consiste à mettre en place des structures juridiques (sociétés, trusts, etc.) qui n'ont pas de finalité économique évidente, si ce n'est de rendre opaque l'origine des flux financiers</label>
-            <input type="radio" id="structures1" name="structures" value="200" required> Oui<br>
-            <input type="radio" id="structures2" name="structures" value="0"> Non<br>
+        <div class="section" id="section17">
+            <div class="question">
+                <label>2.9 L'avocat se voit proposer une affaire dans laquelle le client offre spontanément des honoraires anormalement élevés au début de l'affaire ou à un stade précoce de celle-ci</label>
+                <button type="button" class="option-btn" onclick="selectOption('honoraires', 150, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('honoraires', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(16)">Précédent</button>
+                        <button type="button" class="nav-btn" onclick="nextSection(17)" disabled>Suivant</button>
         </div>
-        <div class="question">
-            <label>2.7 L'avocat n'est responsable que d'une partie de l'affaire</label>
-            <input type="radio" id="responsable1" name="responsable" value="150" required> Oui<br>
-            <input type="radio" id="responsable2" name="responsable" value="0"> Non<br>
+        <div class="section" id="section18">
+            <div class="question">
+                <label>2.10 L'avocat est consulté dans une affaire qui ne relève pas de l'une des deux fonctions habituelles de l'avocat (défense ou conseil juridique) et qui implique également des transferts de fonds (y compris par l'intermédiaire d'un compte fiduciaire)</label>
+                <button type="button" class="option-btn" onclick="selectOption('transferts', 200, this)">Oui</button>
+                <button type="button" class="option-btn" onclick="selectOption('transferts', 0, this)">Non</button>
+            </div>
+            <button type="button" class="nav-btn" onclick="prevSection(17)">Précédent</button>
+            <button type="submit" class="submit-btn" disabled>Soumettre</button>
         </div>
-        <div class="question">
-            <label>2.8 Un avocat luxembourgeois est consulté au Luxembourg en relation avec les investissements effectués dans des pays réputés peu fiables d'un point de vue bancaire ou juridictionnel (par exemple : listes de risques)</label>
-            <input type="radio" id="investissements1" name="investissements" value="200" required> Oui<br>
-            <input type="radio" id="investissements2" name="investissements" value="0"> Non<br>
+        <div class="section" id="resultsSection" style="display: none;">
+            <h2>Résultats</h2>
+            <div class="result-container">
+                <div>
+                    <div class="circle" id="clientScore"></div>
+                    <div class="circle-title">Score Client</div>
+                </div>
+                <div>
+                    <div class="circle" id="dossierScore"></div>
+                    <div class="circle-title">Score Dossier</div>
+                </div>
+                <div>
+                    <div class="circle" id="totalScore"></div>
+                    <div class="circle-title">Score Total</div>
+                </div>
+                <div>
+                    <div class="circle" id="riskLevel"></div>
+                    <div class="circle-title">Classement</div>
+                </div>
+            </div>
+            <button class="pdf-btn" onclick="saveAsPDF()">Enregistrer en PDF</button>
         </div>
-        <div class="question">
-            <label>2.9 L'avocat se voit proposer une affaire dans laquelle le client offre spontanément des honoraires anormalement élevés au début de l'affaire ou à un stade précoce de celle-ci</label>
-            <input type="radio" id="honoraires1" name="honoraires" value="150" required> Oui<br>
-            <input type="radio" id="honoraires2" name="honoraires" value="0"> Non<br>
-        </div>
-        <div class="question">
-            <label>2.10 L'avocat est consulté dans une affaire qui ne relève pas de l'une des deux fonctions habituelles de l'avocat (défense ou conseil juridique) et qui implique également des transferts de fonds (y compris par l'intermédiaire d'un compte fiduciaire)</label>
-            <input type="radio" id="transferts1" name="transferts" value="200" required> Oui<br>
-            <input type="radio" id="transferts2" name="transferts" value="0"> Non<br>
-        </div>
-        <button type="submit" class="submit-btn">Soumettre</button>
     </form>
-    <div class="result-container">
-        <div>
-            <div class="circle" id="clientScore"></div>
-            <div class="circle-title">Score Client</div>
-        </div>
-        <div>
-            <div class="circle" id="dossierScore"></div>
-            <div class="circle-title">Score Dossier</div>
-        </div>
-        <div>
-            <div class="circle" id="totalScore"></div>
-            <div class="circle-title">Score Total</div>
-        </div>
-        <div>
-            <div class="circle" id="riskLevel"></div>
-            <div class="circle-title">Classement</div>
-        </div>
-    </div>
-    <button class="pdf-btn" onclick="saveAsPDF()">Enregistrer en PDF</button>
 
     <script>
+        let currentSection = 1;
+        const scores = {};
+
+        function nextSection(section) {
+            document.getElementById('section' + section).classList.remove('active');
+            document.getElementById('section' + (section + 1)).classList.add('active');
+            currentSection++;
+        }
+
+        function prevSection(section) {
+            document.getElementById('section' + section).classList.remove('active');
+            document.getElementById('section' + (section - 1)).classList.add('active');
+            currentSection--;
+        }
+
+        function selectOption(question, score, element) {
+            scores[question] = score;
+            const buttons = element.parentNode.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+            const nextBtn = document.querySelector(`#section${currentSection} .nav-btn:last-of-type`);
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+            const submitBtn = document.querySelector(`#section${currentSection} .submit-btn`);
+            if (submitBtn) {
+                submitBtn.disabled = false;
+            }
+        }
+
+        function checkFormCompletion() {
+            const date = document.getElementById('date').value;
+            const nomClient = document.getElementById('nomClient').value;
+            const societe = document.getElementById('societe').value;
+            const completePar = document.getElementById('completePar').value;
+            const nextBtn1 = document.getElementById('nextBtn1');
+            if (date && nomClient && societe && completePar) {
+                nextBtn1.disabled = false;
+            } else {
+                nextBtn1.disabled = true;
+            }
+        }
+
         function calculateScore() {
             let clientScore = 0;
             let dossierScore = 0;
 
-            // Section 1
-            if (document.getElementById('relation1').checked) clientScore += 0;
-            if (document.getElementById('relation2').checked) clientScore += 50;
-            if (document.getElementById('relation3').checked) clientScore += 30;
-            if (document.getElementById('relation4').checked) clientScore += 10;
-            if (document.getElementById('relation5').checked) clientScore += 10;
+            clientScore += scores['relation'] || 0;
+            clientScore += scores['localisation'] || 0;
+            clientScore += scores['doute'] || 0;
+            clientScore += scores['domaine'] || 0;
+            clientScore += scores['ppe'] || 0;
+            clientScore += scores['entreprise'] || 0;
+            clientScore += scores['structure'] || 0;
 
-            if (document.getElementById('localisation1').checked) clientScore += 0;
-            if (document.getElementById('localisation2').checked) clientScore += 100;
-
-            if (document.getElementById('doute1').checked) clientScore += 0;
-            if (document.getElementById('doute2').checked) clientScore += 200;
-
-            if (document.getElementById('domaine1').checked) clientScore += 0;
-            if (document.getElementById('domaine2').checked) clientScore += 50;
-            if (document.getElementById('domaine3').checked) clientScore += 100;
-
-            if (document.getElementById('ppe1').checked) clientScore += 200;
-            if (document.getElementById('ppe2').checked) clientScore += 150;
-            if (document.getElementById('ppe3').checked) clientScore += 150;
-            if (document.getElementById('ppe4').checked) clientScore += 0;
-
-            if (document.getElementById('entreprise1').checked) clientScore += 150;
-            if (document.getElementById('entreprise2').checked) clientScore += 0;
-
-            if (document.getElementById('structure1').checked) clientScore += 0;
-            if (document.getElementById('structure2').checked) clientScore += 50;
-            if (document.getElementById('structure3').checked) clientScore += 100;
-
-            // Section 2
-            if (document.getElementById('mission1').checked) dossierScore += 0;
-            if (document.getElementById('mission2').checked) dossierScore += 50;
-            if (document.getElementById('mission3').checked) dossierScore += 100;
-
-            if (document.getElementById('email1').checked) dossierScore += 100;
-            if (document.getElementById('email2').checked) dossierScore += 0;
-
-            if (document.getElementById('contact1').checked) dossierScore += 50;
-            if (document.getElementById('contact2').checked) dossierScore += 0;
-
-            if (document.getElementById('delai1').checked) dossierScore += 50;
-            if (document.getElementById('delai2').checked) dossierScore += 0;
-
-            if (document.getElementById('transactions1').checked) dossierScore += 200;
-            if (document.getElementById('transactions2').checked) dossierScore += 0;
-
-            if (document.getElementById('structures1').checked) dossierScore += 200;
-            if (document.getElementById('structures2').checked) dossierScore += 0;
-
-            if (document.getElementById('responsable1').checked) dossierScore += 150;
-            if (document.getElementById('responsable2').checked) dossierScore += 0;
-
-            if (document.getElementById('investissements1').checked) dossierScore += 200;
-            if (document.getElementById('investissements2').checked) dossierScore += 0;
-
-            if (document.getElementById('honoraires1').checked) dossierScore += 150;
-            if (document.getElementById('honoraires2').checked) dossierScore += 0;
-
-            if (document.getElementById('transferts1').checked) dossierScore += 200;
-            if (document.getElementById('transferts2').checked) dossierScore += 0;
+            dossierScore += scores['mission'] || 0;
+            dossierScore += scores['email'] || 0;
+            dossierScore += scores['contact'] || 0;
+            dossierScore += scores['delai'] || 0;
+            dossierScore += scores['transactions'] || 0;
+            dossierScore += scores['structures'] || 0;
+            dossierScore += scores['responsable'] || 0;
+            dossierScore += scores['investissements'] || 0;
+            dossierScore += scores['honoraires'] || 0;
+            dossierScore += scores['transferts'] || 0;
 
             const totalScore = clientScore + dossierScore;
             let riskLevel = '';
@@ -306,7 +390,7 @@
             } else if (totalScore <= 199) {
                 riskLevel = 'Risque normal';
                 riskClass = 'medium-risk';
-                        } else {
+            } else {
                 riskLevel = 'Risque élevé';
                 riskClass = 'high-risk';
             }
@@ -316,6 +400,8 @@
             document.getElementById('totalScore').innerText = totalScore;
             document.getElementById('riskLevel').innerText = riskLevel;
             document.getElementById('riskLevel').className = 'circle ' + riskClass;
+
+            document.getElementById('resultsSection').style.display = 'block';
         }
 
         function saveAsPDF() {
@@ -331,36 +417,118 @@
 
             // Section 1
             doc.text("1. FACTEURS DE RISQUE RELATIFS AU CLIENT", 10, 70);
-            doc.text("1.1. Établissement de la relation: " + document.querySelector('input[name="relation"]:checked').nextSibling.textContent.trim(), 10, 80);
-            doc.text("1.2. Localisation du client: " + document.querySelector('input[name="localisation"]:checked').nextSibling.textContent.trim(), 10, 90);
-            doc.text("1.3. Doute sur la légitimité: " + document.querySelector('input[name="doute"]:checked').nextSibling.textContent.trim(), 10, 100);
-            doc.text("1.4. Domaine d'activité: " + document.querySelector('input[name="domaine"]:checked').nextSibling.textContent.trim(), 10, 110);
-            doc.text("1.5. PPE: " + document.querySelector('input[name="ppe"]:checked').nextSibling.textContent.trim(), 10, 120);
-            doc.text("1.6. Entreprise: " + document.querySelector('input[name="entreprise"]:checked').nextSibling.textContent.trim(), 10, 130);
-            doc.text("1.7. Structure de propriété: " + document.querySelector('input[name="structure"]:checked').nextSibling.textContent.trim(), 10, 140);
+            doc.text("1.1. Établissement de la relation: " + getOptionText('relation'), 10, 80);
+            doc.text("1.2. Localisation du client: " + getOptionText('localisation'), 10, 90);
+            doc.text("1.3. Doute sur la légitimité: " + getOptionText('doute'), 10, 100);
+            doc.text("1.4. Domaine d'activité: " + getOptionText('domaine'), 10, 110);
+            doc.text("1.5. PPE: " + getOptionText('ppe'), 10, 120);
+            doc.text("1.6. Entreprise: " + getOptionText('entreprise'), 10, 130);
+            doc.text("1.7. Structure de propriété: " + getOptionText('structure'), 10, 140);
 
             // Section 2
             doc.text("2. FACTEURS DE RISQUES RELATIFS AU DOSSIER", 10, 150);
-            doc.text("2.1. Domaine de la mission: " + document.querySelector('input[name="mission"]:checked').nextSibling.textContent.trim(), 10, 160);
-            doc.text("2.2. Consultation par email: " + document.querySelector('input[name="email"]:checked').nextSibling.textContent.trim(), 10, 170);
-            doc.text("2.3. Contact inhabituel: " + document.querySelector('input[name="contact"]:checked').nextSibling.textContent.trim(), 10, 180);
-            doc.text("2.4. Délai exigé: " + document.querySelector('input[name="delai"]:checked').nextSibling.textContent.trim(), 10, 190);
-            doc.text("2.5. Transactions financières: " + document.querySelector('input[name="transactions"]:checked').nextSibling.textContent.trim(), 10, 200);
-            doc.text("2.6. Structures juridiques: " + document.querySelector('input[name="structures"]:checked').nextSibling.textContent.trim(), 10, 210);
-            doc.text("2.7. Responsabilité partielle: " + document.querySelector('input[name="responsable"]:checked').nextSibling.textContent.trim(), 10, 220);
-            doc.text("2.8. Investissements dans des pays peu fiables: " + document.querySelector('input[name="investissements"]:checked').nextSibling.textContent.trim(), 10, 230);
-            doc.text("2.9. Honoraires élevés: " + document.querySelector('input[name="honoraires"]:checked').nextSibling.textContent.trim(), 10, 240);
-            doc.text("2.10. Transferts de fonds: " + document.querySelector('input[name="transferts"]:checked').nextSibling.textContent.trim(), 10, 250);
+            doc.text("2.1. Domaine de la mission: " + getOptionText('mission'), 10, 160);
+            doc.text("2.2. Consultation par email: " + getOptionText('email'), 10, 170);
+            doc.text("2.3. Contact inhabituel: " + getOptionText('contact'), 10, 180);
+            doc.text("2.4. Délai exigé: " + getOptionText('delai'), 10, 190);
+            doc.text("2.5. Transactions financières: " + getOptionText('transactions'), 10, 200);
+            doc.text("2.6. Structures juridiques: " + getOptionText('structures'), 10, 210);
+            doc.text("2.7. Responsabilité partielle: " + getOptionText('responsable'), 10, 220);
+            doc.text("2.8. Investissements dans des pays peu fiables: " + getOptionText('investissements'), 10, 230);
+            doc.text("2.9. Honoraires élevés: " + getOptionText('honoraires'), 10, 240);
+            doc.text("2.10. Transferts de fonds: " + getOptionText('transferts'), 10, 250);
 
             // Adding final scores on a new page
             doc.addPage();
             doc.text("Résultats Finaux", 10, 10);
             doc.text("Score Client: " + document.getElementById('clientScore').innerText, 10, 20);
-            doc.text("Score Dossier: " + document.getElementById('dossierScore').innerText, 10, 30);
+                        doc.text("Score Dossier: " + document.getElementById('dossierScore').innerText, 10, 30);
             doc.text("Score Total: " + document.getElementById('totalScore').innerText, 10, 40);
             doc.text("Classement: " + document.getElementById('riskLevel').innerText, 10, 50);
 
             doc.save("scoring_des_risques.pdf");
+        }
+
+        function getOptionText(question) {
+            const options = {
+                'relation': [
+                    "En personne le client est physiquement présent",
+                    "A distance le client n’était pas présent et personne ne le connaît",
+                    "A distance le client n’était pas présent mais a été introduit par un contact de confiance au sein de l’entreprise",
+                    "A distance le client n’était pas présent mais a été présenté par un collègue",
+                    "A distance le client n’était pas présent mais a été introduit par une personne assujettie à la législation LBC/FT ayant déjà vérifié son identité"
+                ],
+                'localisation': [
+                    "Le pays n’est pas inclus dans la liste des pays à hauts risques",
+                    "Le pays est inclus dans la liste des pays à hauts risques"
+                ],
+                'doute': [
+                    "Non",
+                    "Oui"
+                ],
+                'domaine': [
+                    "Aucun risque établi",
+                    "Risque potentiel identifié",
+                    "Risque établi"
+                ],
+                'ppe': [
+                    "Non",
+                    "PPE",
+                    "Membre de la famille d’un PPE",
+                    "Entretient des liens étroits ou est connu pour entretenir des liens étroits avec un PPE"
+                ],
+                'entreprise': [
+                    "Non",
+                    "Oui"
+                ],
+                'structure': [
+                    "Structure simple",
+                    "Structure complexe",
+                    "Structure inhabituelle ou excessivement complexe compte tenu de la nature des activités"
+                ],
+                'mission': [
+                    "Aucun risque établi",
+                    "Risque potentiel identifié",
+                    "Risque établi"
+                ],
+                'email': [
+                    "Non",
+                    "Oui"
+                ],
+                'contact': [
+                    "Non",
+                    "Oui"
+                ],
+                'delai': [
+                    "Non",
+                    "Oui"
+                ],
+                'transactions': [
+                    "Non",
+                    "Oui"
+                ],
+                'structures': [
+                    "Non",
+                    "Oui"
+                ],
+                'responsable': [
+                    "Non",
+                    "Oui"
+                ],
+                'investissements': [
+                    "Non",
+                    "Oui"
+                ],
+                'honoraires': [
+                    "Non",
+                    "Oui"
+                ],
+                'transferts': [
+                    "Non",
+                    "Oui"
+                ]
+            };
+            return options[question][scores[question] / (question === 'relation' ? 10 : 50)];
         }
     </script>
 </body>
